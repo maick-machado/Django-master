@@ -25,8 +25,8 @@ def new_car_view(request):
             return redirect(to='cars_list')
     else:
         new_car_form = CarForm()
-        return render(
-            request=request, 
-            template_name='new_car.html', 
-            context= {'new_car_form': new_car_form}
-            )
+    return render(
+        request=request, 
+        template_name='new_car.html', 
+        context= {'new_car_form': new_car_form}
+        )
