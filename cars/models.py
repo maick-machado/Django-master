@@ -16,7 +16,12 @@ class Car(models.Model):
     year = models.IntegerField(blank=True, null=True)
     value = models.FloatField(blank=True, null=True)
     # quando eu deleto o carro do banco de dados a foto permanece na pasta do projeto
-    photos = models.ImageField(upload_to='cars/',blank=True, null=True)
+    photos = models.ImageField(
+        default='cars/sem_imagem.png',
+        upload_to='cars/', 
+        blank=True, 
+        null=True,)
+
 
     def __str__(self):
         return self.model
