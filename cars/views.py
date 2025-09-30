@@ -1,8 +1,16 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from cars.models import Car
 from cars.forms import CarForm
-from django.views import View
-from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DetailView,
+    UpdateView,
+    DeleteView,
+)
 
 
 class CarsListView(ListView):
@@ -21,24 +29,34 @@ class CarsListView(ListView):
         return cars
 
 
-class NewCarView(View):
-    def get(self, request):
-        new_car_form = CarForm()
-        return render(
-            request=request,
-            template_name="new_car.html",
-            context={"new_car_form": new_car_form},
-        )  # após adicionado o novo carro, criar uma mensagem de sucesso
+@method_decorator(login_required(login_url="login"), name="dispatch")
+class NewCarCreateView(CreateView):
+    model = Car
+    form_class = CarForm
+    template_name = "new_car.html"
+    success_url = "/cars/"
 
-    def post(self, request):
-        new_car_form = CarForm(data=request.POST, files=request.FILES)
-        if new_car_form.is_valid():
-            new_car_form.save()
-            return redirect(
-                to="cars_list"
-            )  # após erro de algo errado, informar ao usuário
-        return render(
-            request=request,
-            template_name="new_car.html",
-            context={"new_car_form": new_car_form},
-        )
+
+@method_decorator(login_required(login_url="login"), name="dispatch")
+class CarDetailView(DetailView):
+    model = Car
+    template_name = "car_detail.html"
+    # context_object_name = "car"
+
+
+@method_decorator(login_required(login_url="login"), name="dispatch")
+class CarUpdateView(UpdateView):
+    model = Car
+    form_class = CarForm
+    template_name = "car_update.html"
+
+    # success_url = "/cars/"
+    def get_success_url(self):
+        return reverse_lazy("car_detail", kwargs={"pk": self.object.pk})
+
+
+@method_decorator(login_required(login_url="login"), name="dispatch")
+class CarDeleteView(DeleteView):
+    model = Car
+    template_name = "car_delete.html"
+    success_url = "/cars/"
