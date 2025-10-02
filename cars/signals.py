@@ -17,6 +17,12 @@ def car_invetory_update():
     CarInventory.objects.create(cars_count=cars_count, cars_value=cars_value)
 
 
+@receiver(pre_save, sender="cars.Car")
+def car_pre_save(sender, instance, **kwargs):
+    if not instance.bio:
+        instance.bio = "Sem descrição"
+
+
 @receiver(post_save, sender="cars.Car")
 def car_post_save(sender, instance, **kwargs):
     # if created: da para adicionar o if created e adicionar o created nos parametros da função para diferenciar se é criação ou atualização

@@ -82,8 +82,11 @@
   <div class="car-card">
       <img src="{{ object.photos.url }}" alt="{{ object.model }} - {{ object.brand }}">
       <h2>{{ object.brand }} {{ object.model }}</h2>
-            <p><strong>Ano do modelo:</strong> {{ object.year }}</p>
+      <p><strong>Ano do modelo:</strong> {{ object.year }}</p>
       <p><strong>Preço:</strong> R$ {{ object.value }}</p>
+      {% if object.bio %}
+        <p><strong>Descrição:</strong> {{ object.bio }}</p>
+      {% endif %}
   </div>
   <div class="buttons-container">
     <a href="{% url 'car_update' pk=object.pk %}" class="btn btn-primary">Editar</a>
